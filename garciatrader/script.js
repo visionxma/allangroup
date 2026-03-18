@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function isMob() { return window.innerWidth < 768; }
 
         function getOffset(index) {
-            const w = trackEl.parentElement.clientWidth;
-            const itemW = w * PEEK;
+            const w     = trackEl.parentElement.clientWidth;
+            const itemW = trackEl.children[0]?.offsetWidth || w * PEEK;
             const startX = (w - itemW) / 2;
             return startX - index * itemW;
         }
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prevEl:     document.getElementById('rcPrev'),
         nextEl:     document.getElementById('rcNext'),
         dots:       document.querySelectorAll('#rcDots .peek-dot'),
-        mobileOnly: true,
+        mobileOnly: false,
     });
 
     // ---- Carrossel: galeria lifestyle (mobile only) ----

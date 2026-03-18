@@ -426,11 +426,56 @@ ul { list-style: none; }
     align-items: center;
     text-align: center;
     gap: 22px;
-    max-width: 760px;
     width: 100%;
-    margin: 0 auto;
     position: relative;
     z-index: 2;
+}
+
+/* Coluna de texto da hero */
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 22px;
+    width: 100%;
+}
+
+/* Coluna do vídeo na hero — oculto no mobile, abaixo do texto */
+.hero-video-col {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Desktop — layout 2 colunas */
+@media (min-width: 900px) {
+    .hero-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 56px;
+        text-align: left;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .hero-video-col {
+        flex-shrink: 0;
+        width: 280px;
+        max-width: 280px;
+        margin: 0;
+    }
+    .hero-text {
+        flex: 1;
+        min-width: 0;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .hero-text .headline,
+    .hero-text .subheadline { text-align: left; margin: 0; }
+    .hero-text .hero-counter-row,
+    .hero-text .hero-actions { justify-content: flex-start; }
+    .hero-text .trust-badges { justify-content: flex-start; }
 }
 
 /* Ribbon Badge */
@@ -803,18 +848,54 @@ ul { list-style: none; }
 
 .ht-badge i { width: 18px; height: 18px; }
 
-/* Results Carousel */
-/* Desktop: 3 fotos lado a lado */
+/* Results Carousel — carrossel em todas as telas */
 .results-photos {
     position: relative;
     margin-top: 40px;
+    overflow: hidden;
+    perspective: 1100px;
 }
 
 .results-photos-track {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 24px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
+    transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1);
+    will-change: transform;
+}
+
+.results-photos-track > .rc-phone-frame {
+    flex: 0 0 38%;
+    max-width: 38%;
+}
+
+/* Setas e dots visíveis em todas as telas para esta seção */
+.results-photos .peek-btn-prev,
+.results-photos .peek-btn-next { display: flex; }
+.results-photos .peek-dots      { display: flex; }
+
+/* Efeito 3D coverflow para todos os tamanhos de tela */
+.results-photos-track > .rc-phone-frame.peek-left {
+    transform: scale(0.82) rotateY(14deg);
+    opacity: 0.6;
+    z-index: 1;
+}
+.results-photos-track > .rc-phone-frame.peek-right {
+    transform: scale(0.82) rotateY(-14deg);
+    opacity: 0.6;
+    z-index: 1;
+}
+.results-photos-track > .rc-phone-frame.peek-active {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+    z-index: 3;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.65),
+        0  0  40px rgba(204,255,0,0.14);
+    transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1),
+                opacity   0.5s ease,
+                box-shadow 0.5s ease;
 }
 
 
@@ -1995,6 +2076,16 @@ ul { list-style: none; }
         0 0 40px rgba(204,255,0,0.12);
 }
 
+.rc-phone-frame--video video {
+    width: 100%;
+    border-radius: 20px;
+    display: block;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 20px 50px rgba(0,0,0,0.7),
+        0 0 30px rgba(204,255,0,0.06);
+}
+
 .rc-phone-label {
     position: absolute;
     bottom: -12px;
@@ -2337,6 +2428,13 @@ ul { list-style: none; }
     display: block;
 }
 
+.video-depo-item.depo-img-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 /* ==========================================================================
    PEEK CAROUSEL — 3D coverflow (mobile) | side-by-side (desktop)
    ========================================================================== */
@@ -2466,7 +2564,7 @@ ul { list-style: none; }
     }
 
     /* Cada item ocupa 80% */
-    .results-photos-track > .rc-phone-frame,
+    .results-photos-track > .rc-phone-frame { flex: 0 0 80%; max-width: 80%; }
     .galeria-carousel-track > .galeria-item,
     .video-depo-grid > .video-depo-item { flex: 0 0 80%; max-width: 80%; }
 
@@ -2511,6 +2609,12 @@ ul { list-style: none; }
     grid-template-columns: 1fr;
     gap: 48px;
     align-items: center;
+}
+
+/* Quando não há vídeo — texto centralizado */
+.method-grid--text-only {
+    max-width: 780px;
+    margin: 0 auto;
 }
 
 /* Wrapper do vídeo */
@@ -2642,7 +2746,7 @@ ul { list-style: none; }
 
 /* Desktop: vídeo à esquerda, texto à direita */
 @media (min-width: 768px) {
-    .method-grid {
+    .method-grid:not(.method-grid--text-only) {
         grid-template-columns: 340px 1fr;
         gap: 64px;
     }
@@ -2662,8 +2766,23 @@ ul { list-style: none; }
     }
 
     .demo-card {
-        padding: 24px 18px;
+        padding: 24px 18px 32px;
     }
+
+    .demo-stats {
+        gap: 0;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .demo-stat {
+        flex: 1;
+        min-width: 0;
+        padding: 0 4px;
+    }
+
+    .demo-stat-num   { font-size: 1.25rem; }
+    .demo-stat-label { font-size: 0.62rem; }
 
     .tc-inner {
         padding: 24px 18px;
