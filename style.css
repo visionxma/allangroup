@@ -2695,6 +2695,16 @@ ul { list-style: none; }
     gap: 20px;
 }
 
+.method-cta {
+    align-self: flex-start;
+}
+
+@media (max-width: 767px) {
+    .method-cta {
+        align-self: center;
+    }
+}
+
 /* Cards de pontos */
 .method-points {
     display: flex;
